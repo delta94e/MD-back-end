@@ -147,6 +147,8 @@
 
 ### 0.3 Data Structures & Algorithms
 
+> 📖 [**Deep Dive →**](./phase-0-cs-fundamentals/0.3-Data-Structures-Algorithms-Deep-Dive.md)
+
 ```
 ╔═══════════════════════════════════════════════════════════╗
 ║  KHÔNG CẦN giải 1000 bài LeetCode!                      ║
@@ -358,6 +360,8 @@
 ```
 
 ### 2.1 Mô hình OSI / TCP-IP (High-Level → Low-Level)
+
+> 📖 [**Deep Dive →**](./phase-2-networking-protocols/2.1-Mo-Hinh-OSI-TCP-IP-Deep-Dive.md)
 
 ```
     ┌──────────────────────────────────────────────────────┐
@@ -665,7 +669,159 @@
     └─────────────────────────────────────────────────┘
 ```
 
-### 4.3 Authentication & Authorization
+### 4.3 JSON APIs
+
+```
+    ┌─────────────────────────────────────────────────┐
+    │  JSON API = Data format + Convention standard   │
+    │                                                  │
+    │  JSON (JavaScript Object Notation):              │
+    │  ├── Lightweight data interchange format        │
+    │  ├── Human-readable + Machine-parseable         │
+    │  ├── Native support trong mọi ngôn ngữ         │
+    │  └── De facto standard cho Web APIs             │
+    │                                                  │
+    │  Go JSON Handling:                               │
+    │  ├── encoding/json (standard library)           │
+    │  │   ├── json.Marshal / json.Unmarshal          │
+    │  │   ├── Struct tags: `json:"name,omitempty"`   │
+    │  │   └── Custom Marshaler/Unmarshaler           │
+    │  ├── json.Decoder (streaming — tốt cho I/O)    │
+    │  └── Thư viện nhanh hơn:                       │
+    │      ├── jsoniter (drop-in replacement, 6x)     │
+    │      ├── easyjson (code generation)              │
+    │      └── sonic (SIMD, 10x faster)               │
+    │                                                  │
+    │  JSON:API Specification (jsonapi.org):            │
+    │  ├── Chuẩn hóa response format                  │
+    │  │   {                                           │
+    │  │     "data": { "type": "users", "id": "1",   │
+    │  │               "attributes": {...} },          │
+    │  │     "included": [...],                        │
+    │  │     "links": { "self": "/users/1" }           │
+    │  │   }                                           │
+    │  ├── Relationships & Resource linkage           │
+    │  ├── Sparse fieldsets (?fields[user]=name,email)│
+    │  └── Compound documents (reduce N+1 requests)  │
+    │                                                  │
+    │  Best Practices:                                 │
+    │  ├── Consistent response envelope               │
+    │  ├── ISO 8601 cho datetime                      │
+    │  ├── snake_case vs camelCase (chọn 1, giữ nhất │
+    │  │   quán trong toàn bộ API)                    │
+    │  ├── Null vs missing field (semantic khác nhau) │
+    │  └── Content-Type: application/json             │
+    └─────────────────────────────────────────────────┘
+```
+
+### 4.4 SOAP (Simple Object Access Protocol)
+
+```
+    ┌─────────────────────────────────────────────────┐
+    │  SOAP = XML-based protocol, enterprise legacy   │
+    │                                                  │
+    │  ⚠️ SOAP đang dần bị thay thế bởi REST/gRPC,   │
+    │  nhưng vẫn phổ biến trong:                       │
+    │  • Banking, Healthcare, Government              │
+    │  • Legacy enterprise systems (SAP, Oracle)      │
+    │  • Systems cần WS-Security, WS-Transaction      │
+    │                                                  │
+    │  Cấu trúc SOAP Message:                          │
+    │  ┌──────────────── Envelope ──────────────────┐ │
+    │  │  ┌──── Header (optional) ────┐             │ │
+    │  │  │  Authentication, Routing  │             │ │
+    │  │  └───────────────────────────┘             │ │
+    │  │  ┌──── Body ─────────────────┐             │ │
+    │  │  │  <GetUserRequest>         │             │ │
+    │  │  │    <UserId>123</UserId>   │             │ │
+    │  │  │  </GetUserRequest>        │             │ │
+    │  │  └───────────────────────────┘             │ │
+    │  └────────────────────────────────────────────┘ │
+    │                                                  │
+    │  WSDL (Web Services Description Language):       │
+    │  ├── Contract-first: define interface trước     │
+    │  ├── Auto-generate client code từ WSDL         │
+    │  └── Type-safe (XML Schema validation)          │
+    │                                                  │
+    │  SOAP vs REST:                                   │
+    │  ┌──────────┬──────────────┬─────────────────┐  │
+    │  │          │ SOAP         │ REST            │  │
+    │  ├──────────┼──────────────┼─────────────────┤  │
+    │  │ Format   │ XML only     │ JSON, XML, ...  │  │
+    │  │ Protocol │ HTTP, SMTP   │ HTTP            │  │
+    │  │ Contract │ WSDL (strict)│ OpenAPI (loose) │  │
+    │  │ Security │ WS-Security  │ HTTPS + OAuth   │  │
+    │  │ State    │ Can be       │ Stateless       │  │
+    │  │ Size     │ Verbose      │ Lightweight     │  │
+    │  │ Learning │ Phức tạp     │ Đơn giản       │  │
+    │  └──────────┴──────────────┴─────────────────┘  │
+    │                                                  │
+    │  Go SOAP: github.com/hooklift/gowsdl            │
+    │  (generate Go client từ WSDL file)              │
+    └─────────────────────────────────────────────────┘
+```
+
+### 4.5 GraphQL
+
+```
+    ┌─────────────────────────────────────────────────┐
+    │  GraphQL = Query language cho API (Facebook, 2015)│
+    │                                                  │
+    │  Giải quyết vấn đề gì?                           │
+    │  ├── Over-fetching: REST trả DƯ data            │
+    │  │   GET /users/1 → trả 50 fields, chỉ cần 3  │
+    │  ├── Under-fetching: cần gọi NHIỀU endpoints    │
+    │  │   GET /users/1 → GET /users/1/posts → ...   │
+    │  └── GraphQL: 1 request, lấy CHÍNH XÁC data cần│
+    │                                                  │
+    │  Query example:                                  │
+    │  query {                                         │
+    │    user(id: "123") {                             │
+    │      name                                        │
+    │      email                                       │
+    │      posts(last: 5) {                            │
+    │        title                                     │
+    │        createdAt                                  │
+    │      }                                           │
+    │    }                                             │
+    │  }                                               │
+    │                                                  │
+    │  Core Concepts:                                  │
+    │  ├── Schema Definition Language (SDL)           │
+    │  │   type User { name: String!, posts: [Post] } │
+    │  ├── Queries (đọc), Mutations (ghi),            │
+    │  │   Subscriptions (real-time, WebSocket)        │
+    │  ├── Resolvers: functions trả data cho fields   │
+    │  └── DataLoader: batching N+1 queries!          │
+    │                                                  │
+    │  Khi nào dùng GraphQL vs REST?                   │
+    │  ┌──────────────┬──────────────────────────┐    │
+    │  │ GraphQL      │ REST                     │    │
+    │  ├──────────────┼──────────────────────────┤    │
+    │  │ Mobile apps  │ Simple CRUD              │    │
+    │  │ (bandwidth)  │ Caching dễ (HTTP cache)  │    │
+    │  │ Complex data │ Microservices nội bộ     │    │
+    │  │ graphs       │ File upload              │    │
+    │  │ Multiple     │ Public APIs (simple)     │    │
+    │  │ clients      │ Rate limiting dễ hơn    │    │
+    │  └──────────────┴──────────────────────────┘    │
+    │                                                  │
+    │  ⚠️ Cạm bẫy GraphQL:                            │
+    │  ├── N+1 query problem (dùng DataLoader!)       │
+    │  ├── Query complexity → DoS attack              │
+    │  │   (limit depth, cost analysis)                │
+    │  ├── Caching khó hơn REST (không dùng HTTP cache│
+    │  │   → dùng persisted queries, Apollo cache)    │
+    │  └── Learning curve cao hơn REST                 │
+    │                                                  │
+    │  Go GraphQL:                                     │
+    │  ├── gqlgen (code-first, schema generation)     │
+    │  │   → Recommend cho Go (type-safe, performant) │
+    │  └── graphql-go/graphql (schema-first)          │
+    └─────────────────────────────────────────────────┘
+```
+
+### 4.6 Authentication & Authorization
 
 ```
     ┌─────────────────────────────────────────────────┐
@@ -690,7 +846,7 @@
     └─────────────────────────────────────────────────┘
 ```
 
-### 4.4 Middleware & Server Architecture
+### 4.7 Middleware & Server Architecture
 
 ```
     ┌─────────────────────────────────────────────────┐
