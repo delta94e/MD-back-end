@@ -413,6 +413,8 @@
 
 ### 2.3 HTTP Deep Dive
 
+> 📖 [**Deep Dive →**](./phase-2-networking-protocols/2.3-HTTP-Deep-Dive.md)
+
 ```
     ┌─────────────────────────────────────────────────┐
     │  HTTP/1.1 → HTTP/2 → HTTP/3                     │
@@ -443,6 +445,8 @@
 
 ### 2.4 Security (TLS/HTTPS)
 
+> 📖 [**Deep Dive →**](./phase-2-networking-protocols/2.4-Security-TLS-HTTPS-Deep-Dive.md)
+
 ```
     ┌─────────────────────────────────────────────────┐
     │  1. TLS Handshake                               │
@@ -462,6 +466,8 @@
 ```
 
 ### 2.5 DNS
+
+> 📖 [**Deep Dive →**](./phase-2-networking-protocols/2.5-DNS-Deep-Dive.md)
 
 ```
     ┌─────────────────────────────────────────────────┐
@@ -483,6 +489,8 @@
 ## Phase 3: Database & Data Storage
 
 ### 3.1 Relational Database (PostgreSQL)
+
+> 📖 [**Deep Dive →**](./phase-3-database-storage/3.1-PostgreSQL-Deep-Dive.md)
 
 ```
 ╔═══════════════════════════════════════════════════════════════╗
